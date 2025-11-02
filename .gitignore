@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Webservice/appsettings.json
 /WebRazor/appsettings.json
+/WebRazor/appsettings.Development.json
