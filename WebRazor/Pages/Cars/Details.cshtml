@@ -1,0 +1,40 @@
+﻿@page
+@model WebRazor.Pages.Cars.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if(Model.Car is null)
+{
+    <p>No car was found with that id</p>
+}
+else
+{
+    <div class="flex justify-center mt-10">>
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="md:w-1/2 flex jsutify-center"><img src="@Model.Car.URL" alt="@Model.Car.Name" class="w-full max-h-96 object-cover" />
+                </div>
+            <div class="md:w-1/2 flex flex-col gap-2">
+                <div class="flex justify-between">
+                    <span>Name:</span>
+                    <span>@Model.Car.Name</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Brand:</span>
+                    <span>@Model.Car.Brand</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Model:</span>
+                    <span>@Model.Car.Model</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Price:</span>
+                    <span>$@Model.Car.Price</span>
+                </div>          
+            </div>
+        </div>
+    </div>
+}
+
+
+

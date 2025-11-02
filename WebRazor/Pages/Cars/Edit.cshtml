@@ -1,0 +1,28 @@
+﻿@page
+@model WebRazor.Pages.Cars.DetailsModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@if (Model.Car is null)
+{
+    <p>No car was found with that id</p>
+}
+else
+{
+    <div class="flex justify-center mt-10">
+        >
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="md:w-1/2 flex jsutify-center">
+                <img src="@Model.Car.URL" alt="@Model.Car.Name" class="w-full max-h-96 object-cover" />
+            </div>
+            <form method="post">
+                <div class="md:w-1/2 flex flex-col gap-2">
+                    
+                    
+                </div>
+            </form>
+            
+        </div>
+    </div>
+}

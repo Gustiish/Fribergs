@@ -37,6 +37,11 @@ namespace ApplicationCore.Services.Builders
             this.Car.Price = price;
         }
 
+        public void SetImage(string url)
+        {
+            this.Car.URL = url;
+        }
+
         private void Reset()
         {
             this.Car = new Car();

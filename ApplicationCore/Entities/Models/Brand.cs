@@ -1,9 +1,9 @@
 ﻿namespace ApplicationCore.Entities.Models
 {
-    public class Brand
+    public sealed class Brand
     {
         public Guid Id { get; set; }
-        public string BrandName { get; set; }
+        public required string BrandName { get; set; }
         public required List<Model> Models { get; set; }
 
     }

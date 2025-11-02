@@ -8,6 +8,7 @@ namespace ApplicationCore.Interfaces
         void SetModel(string model);
         void SetBrand(string brand);
         void SetPrice(double price);
+        void SetImage(string url);
         Car Build();
 
     }
