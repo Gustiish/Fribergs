@@ -9,6 +9,10 @@ namespace Webservice.Services.MappingProfiles
         public MappingProfile()
         {
             CreateMap<Car, CarDTO>().ReverseMap();
+
+            CreateMap<Brand, BrandDTO>().ReverseMap();
+
+            CreateMap<Model, ModelDTO>().ForMember(dest => dest.Brand, opt => opt.Ignore()).ReverseMap();
         }
 
     }

@@ -1,5 +1,5 @@
-﻿@page
-@model WebRazor.Pages.Cars.DetailsModel
+﻿@page "{id:guid}"
+@model WebRazor.Pages.Cars.EditModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -11,18 +11,46 @@
 else
 {
     <div class="flex justify-center mt-10">
-        >
-        <div class="flex flex-col md:flex-row gap-4">
-            <div class="md:w-1/2 flex jsutify-center">
+
+        <div class="flex flex-col md:flex-row gap-8 justify-center mt-10 w-full max-w-5xl mx-auto">
+            <div class="md:w-1/2 flex justify-center">
                 <img src="@Model.Car.URL" alt="@Model.Car.Name" class="w-full max-h-96 object-cover" />
             </div>
-            <form method="post">
-                <div class="md:w-1/2 flex flex-col gap-2">
-                    
-                    
+            <form method="post" class="md:w-1/2 flex flex-col gap-4">
+                <input asp-for="Car.Id" type="hidden" />
+                <div class="grid grid-cols-3 gap-4 items-center">
+                    <label asp-for="Car.Name" class="font-semibold text-right">Name:</label>
+                    <input asp-for="Car.Name" class="col-span-2 border border-gray-300 rounded px-2 py-1 w-full" />
+                    <span asp-validation-for="Car.Name" class="col-span-3 text-red-600 text-sm text-right"></span>
+
+
+                    <label asp-for="Car.Brand" class="font-semibold text-right">Brand:</label>
+                    <input asp-for="Car.Brand" class="col-span-2 border border-gray-300 rounded px-2 py-1 w-full" />
+                    <span asp-validation-for="Car.Brand" class="col-span-3 text-red-600 text-sm text-right"></span>
+
+                    <label asp-for="Car.Model" class="font-semibold text-right">Model:</label>
+                    <input asp-for="Car.Model" class="col-span-2 border border-gray-300 rounded px-2 py-1 w-full" />
+                    <span asp-validation-for="Car.Model" class="col-span-3 text-red-600 text-sm text-right"></span>
+
+
+                    <label asp-for="Car.Price" class="font-semibold text-right">Price:</label>
+                    <input asp-for="Car.Price" class="col-span-2 border border-gray-300 rounded px-2 py-1 w-full" />
+                    <span asp-validation-for="Car.Price" class="col-span-3 text-red-600 text-sm text-right"></span>
+
+                    <label asp-for="Car.URL" class="font-semibold text-right">URL:</label>
+                    <input asp-for="Car.URL" class="col-span-2 border border-gray-300 rounded px-2 py-1 w-full" />
+                    <span asp-validation-for="Car.URL" class="col-span-3 text-red-600 text-sm text-right"></span>
                 </div>
+                <button class="bg-sky-500 hover:bg-sky-700 rounded px-4 py-2 text-white" type="submit">Update car</button>
             </form>
-            
+
+
         </div>
     </div>
+}
+
+<a asp-page="./Index" class="bg-sky-500 hover:bg-sky-700 rounded px-4 py-2 text-white">Back to list</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

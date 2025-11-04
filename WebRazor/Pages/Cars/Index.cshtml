@@ -38,7 +38,7 @@ else
                     <td>
                         <a asp-page="./Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Details</a>
                         <a asp-page="./Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Edit</a>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteCar('@car.Id')">Delete</button>
+                        <a asp-page="./Delete" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Delete</a>
                     </td>
                 </tr>
             }

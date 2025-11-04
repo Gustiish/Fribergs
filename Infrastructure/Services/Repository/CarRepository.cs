@@ -90,6 +90,7 @@ namespace Infrastructure.Services.Repository
         {
             try
             {
+                _context.Update(car);
                 await _context.SaveChangesAsync();
                 return true;
             }

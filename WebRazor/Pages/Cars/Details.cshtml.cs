@@ -15,11 +15,10 @@ namespace WebRazor.Pages.Cars
         }
         public async Task<IActionResult> OnGet(Guid id)
         {
-            Car = await _client.GetCar(id);
+            Car = await _client.GetCarAsync(id);
             if (Car == null)
                 return NotFound();
             return Page();
-
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.Entities.Models;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Repository;
 using AutoMapper;
 using Contracts.DTO;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Webservice.Modules.CarModule
@@ -17,6 +19,7 @@ namespace Webservice.Modules.CarModule
             endpoints.MapPost("/", Post);
             endpoints.MapPatch("/{id}", Patch);
             endpoints.MapDelete("/{id}", Delete);
+            endpoints.MapGet("/carreferences", GetCarReferences)
         }
 
         public static async Task<IResult> GetAll([FromServices] ICarRepository _repo, IMapper _mapper)
@@ -32,19 +35,31 @@ namespace Webservice.Modules.CarModule
             return car is null ? TypedResults.NotFound($"No car with id {id}") : TypedResults.Ok(car);
         }
 
-        public static async Task<IResult> Post(Car car, [FromServices] ICarRepository _repo)
+        public static async Task<IResult> Post(CarDTO car, [FromServices] ICarRepository _repo, IValidator<CarDTO> _validator, IMapper _mapper)
         {
-            return await _repo.CreateAsync(car) is false ? TypedResults.BadRequest() : TypedResults.Created();
+            var result = _validator.Validate(car);
+            if (!result.IsValid)
+                return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
+            return await _repo.CreateAsync(_mapper.Map<Car>(car)) is false ? TypedResults.BadRequest($"Failed to create entity") : TypedResults.Created();
         }
 
-        public static async Task<IResult> Patch(Car car, [FromServices] ICarRepository _repo)
+        public static async Task<IResult> Patch(CarDTO car, [FromServices] ICarRepository _repo, IValidator<CarDTO> _validator, IMapper _mapper)
         {
-            return await _repo.UpdateAsync(car) is false ? TypedResults.BadRequest() : TypedResults.Ok(car);
+            var result = _validator.Validate(car);
+            if (!result.IsValid)
+                return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
+            return await _repo.UpdateAsync(_mapper.Map<Car>(car)) is false ? TypedResults.BadRequest("Failed to update entity") : TypedResults.Ok(car);
         }
 
         public static async Task<IResult> Delete(Guid id, [FromServices] ICarRepository _repo)
         {
             return await _repo.DeleteAsync(id) is false ? TypedResults.BadRequest() : TypedResults.NoContent();
+        }
+
+        public static async Task<IResult> GetCarReferences([FromServices] ICarReference _reference, IMapper _mapper)
+        {
+            var carReferences = _mapper.Map<List<BrandDTO>>(await _reference.GetCarReferencesAsync());
+            return carReferences is null ? TypedResults.NotFound("No car references found") : TypedResults.Ok(carReferences);
         }
     }
 }

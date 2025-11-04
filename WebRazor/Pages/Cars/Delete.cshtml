@@ -1,4 +1,44 @@
 ﻿@page
 @model WebRazor.Pages.Cars.DeleteModel
 @{
+    ViewData["Title"] = "Delete";
+}
+
+@if (Model.Car is null)
+{
+    <p>No car was found with that id</p>
+}
+else
+{
+    <div class="flex justify-center mt-10">
+
+        <div class="flex flex-col md:flex-row gap-8 justify-center mt-10 w-full max-w-5xl mx-auto bg-gray-50 p-6 rounded-lg shadow">
+            <div class="md:w-1/2 flex flex-col items-start">
+
+                <img src="@Model.Car.URL" alt="@Model.Car.Name" class="w-full max-h-96 object-cover rounded shadow" />
+                <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Car.Id" class="mt-6">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow self-start ">
+                        Delete
+                    </button>
+                </form>
+            </div>
+            <div class="grid grid-cols-2 gap-y-2 items-center">
+                <span class="font-semibold text-right pr-4">Name:</span>
+                <span>@Model.Car.Name</span>
+
+                <span class="font-semibold text-right pr-4">Brand:</span>
+                <span>@Model.Car.Brand</span>
+
+                <span class="font-semibold text-right pr-4">Model:</span>
+                <span>@Model.Car.Model</span>
+
+                <span class="font-semibold text-right pr-4">Price:</span>
+                <span>$@Model.Car.Price</span>
+            </div>
+          
+        </div>
+     
+    </div>
+
+    
 }

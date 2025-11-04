@@ -20,12 +20,33 @@ namespace WebRazor.Services.API
             return await response.Content.ReadFromJsonAsync<List<CarDTO>>();
         }
 
-        public async Task<CarDTO> GetCar(Guid id)
+        public async Task<CarDTO> GetCarAsync(Guid id)
         {
             var response = await _client.GetAsync($"/cars/{id}");
             if (!response.IsSuccessStatusCode)
                 return null;
             return await response.Content.ReadFromJsonAsync<CarDTO>();
+
+        }
+
+        public async Task<bool> UpdateCarAsync(CarDTO car)
+        {
+            var response = await _client.PatchAsJsonAsync($"/cars/{car.Id}", car);
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
+        }
+
+        public async Task<bool> DeleteCarAsync(Guid id)
+        {
+            var response = await _client.DeleteAsync($"/cars/{id}");
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
+        }
+
+        public async Task<List<Brand>> GetCarReferencesAsync()
+        {
 
         }
 
