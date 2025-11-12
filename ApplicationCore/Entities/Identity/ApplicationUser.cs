@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ApplicationCore.Interfaces.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace ApplicationCore.Entities.Identity
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>, IEntity
     {
 
     }

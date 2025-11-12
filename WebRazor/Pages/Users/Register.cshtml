@@ -1,0 +1,66 @@
+﻿@page
+@model WebRazor.Pages.Users.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1 class="font-bold text-xl text-center mb-4">Register</h1>
+
+<div class="flex justify-center">
+    <form method="post" class="gap-4 flex flex-col p-6 rounded border w-96 bg-white shadow items-start">
+        <div class="gap-2 flex flex-col p-2">
+            <label asp-for="CreateUserDTO.Email" class="font-semibold">Email</label>
+            <input asp-for="CreateUserDTO.Email"
+                   class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
+        </div>
+        <div class="gap-2 flex flex-col p-2">
+            <label asp-for="CreateUserDTO.Password" class="font-semibold">Password</label>
+            <input asp-for="CreateUserDTO.Password" id="Password"
+                   type="password"
+                   class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
+        </div>
+        <div class="gap-2 flex flex-col p-2">
+            <label class="font-semibold" id="ConfirmPassword">Confirm Password</label>
+            <input type="password"
+                   class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
+            <div id="passwordError"></div>
+        </div>
+
+        <div class="gap-2 flex flex-col p-2 mt-2">
+            <button class="rounded no-wrap text-white bg-sky-500 hover:bg-sky-600 px-3 py-2 transition" type="submit">
+                Register
+            </button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        console.log("script loaded");
+        const password = document.getElementById('Password');
+        const confirmPassword = document.getElementById('ConfirmPassword');
+        const form = document.querySelector("form");
+        const passwordError = document.getElementById('passwordError');
+
+        form.addEventListener('submit', function (e) {
+            passwordError.textContent = "";
+
+            if (password.value !== confirmPassword.value){
+                e.preventDefault();
+
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = "Password don't match!";
+                errorMessage.classList.add("text-red-500", "mt-1");
+
+                passwordError.appendChild(errorMessage);
+
+                confirmPassword.focus();
+            }
+
+        })
+    </script>
+}
+

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebRazor.Pages.References
+namespace WebRazor.Pages.Users
 {
-    public class BrandIndexModel : PageModel
+    public class DetailsModel : PageModel
     {
         public void OnGet()
         {

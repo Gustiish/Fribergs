@@ -1,4 +1,5 @@
-using WebRazor.Services.API;
+using Contracts.DTO;
+using WebRazor.Services.ServiceExtensions;
 
 namespace WebRazor
 {
@@ -11,17 +12,20 @@ namespace WebRazor
 
 
             builder.Services.AddRazorPages();
-            builder.Services.AddHttpClient<HttpClientAPI>("BackendAPI", options =>
-            {
-                options.BaseAddress = new Uri(builder.Configuration["WebserviceAddress"]);
-            });
+
+            builder.Services.AddTypedClientAPI<CarDTO>("cars", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientAPI<CreateCarDTO>("cars", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientAPI<UserDTO>("users", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientAPI<CreateUserDTO>("users", builder.Configuration["WebserviceAddress"]);
+
+
+
+
 
 
 
 
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
 
 
             app.UseHttpsRedirection();

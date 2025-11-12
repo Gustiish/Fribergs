@@ -1,4 +1,66 @@
 ﻿@page
 @model WebRazor.Pages.Cars.CreateModel
 @{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="font-bold text-2xl mb-8">Create a car</h1>
+<div class="grid grid-cols-2 gap-6">
+    <div id="imagePreview" class="flex items-center justify-center border rounded-lg shadow bg-gray-100">
+        <img id="carImage" class="object-contain h-full w-auto rounded-md" alt="Car Image Preview" src=""/>
+    </div>
+    <form method="post" class="flex flex-col gap-4 p-6 border rounded-lg shadow bg-white">
+        <div class="flex items-center gap-4">
+            <label asp-for="CreateCarDTO.Name" class="text-sm font-medium text-gray-700 text-right pr-2">
+                Name
+            </label>
+            <input asp-for="CreateCarDTO.Name" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div class="flex items-center gap-4">
+            <label asp-for="CreateCarDTO.Brand" class="text-sm font-medium text-gray-700 text-right pr-2">
+                Brand
+            </label>
+            <input asp-for="CreateCarDTO.Brand" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div class="flex items-center gap-4">
+            <label asp-for="CreateCarDTO.Model" class="text-sm font-medium text-gray-700 text-right pr-2">
+                Model
+            </label>
+            <input asp-for="CreateCarDTO.Model" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div class="flex items-center gap-4">
+            <label asp-for="CreateCarDTO.Price" class="text-sm font-medium text-gray-700 text-right pr-2">
+                Price
+            </label>
+            <input asp-for="CreateCarDTO.Price" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div class="flex items-center gap-4">
+            <label asp-for="CreateCarDTO.URL" class="text-sm font-medium text-gray-700 text-right pr-2">
+                URL
+            </label>
+            <input asp-for="CreateCarDTO.URL" class="w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" id="ImageforPreview" />
+        </div>
+        <button type="submit" class="items-start rounded text-white nowrap px-4 py-2 bg-sky-500 hover:bg-sky-700">Submit</button>
+    </form>
+</div>
+    
+
+<div class="mt-4">
+    <a asp-page="./Index" class="bg-sky-500 hover:bg-sky-700 rounded px-4 py-2 text-white">Back to list</a>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+   <script>
+       const input = document.getElementById('ImageforPreview');
+       const carImage = document.getElementById('carImage');
+
+       input.addEventListener('input', () =>{
+           const url = input.value.trim();
+           carImage.src = url;
+       })
+
+   </script>
+
+
 }

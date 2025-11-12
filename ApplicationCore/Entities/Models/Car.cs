@@ -1,6 +1,8 @@
-﻿namespace ApplicationCore.Entities.Models
+﻿using ApplicationCore.Interfaces.Entity;
+
+namespace ApplicationCore.Entities.Models
 {
-    public sealed class Car
+    public sealed class Car : IEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
