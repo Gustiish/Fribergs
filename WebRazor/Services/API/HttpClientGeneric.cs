@@ -43,9 +43,9 @@
                 return false;
             return true;
         }
-        public async Task<bool> CreateAsync(T entity)
+        public async Task<bool> CreateAsync<TCreate>(TCreate entity) where TCreate : class
         {
-            var response = await _client.PostAsJsonAsync<T>($"/{_prefix}", entity);
+            var response = await _client.PostAsJsonAsync<TCreate>($"/{_prefix}", entity);
             if (!response.IsSuccessStatusCode)
                 return false;
             return true;

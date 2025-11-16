@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Webservice.Modules.CarModule
 {
-    public static class EndpointsCars
+    public static class EndpointsExtensions
     {
         public static void CarEndpoints(this IEndpointRouteBuilder app)
         {
@@ -15,9 +15,9 @@ namespace Webservice.Modules.CarModule
 
             endpoints.MapGet("/getall", GetAll);
             endpoints.MapGet("/{id}", Get);
-            endpoints.MapPost("/", Post).RequireAuthorization();
-            endpoints.MapPatch("/{id}", Patch).RequireAuthorization();
-            endpoints.MapDelete("/{id}", Delete).RequireAuthorization();
+            endpoints.MapPost("/", Post).RequireAuthorization("AdminAccess");
+            endpoints.MapPatch("/{id}", Patch).RequireAuthorization("AdminAccess");
+            endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminAccess");
         }
 
         public static async Task<IResult> GetAll([FromServices] IRepository<Car> _repo, IMapper _mapper)

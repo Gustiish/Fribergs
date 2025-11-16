@@ -27,7 +27,6 @@ namespace Webservice
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -43,7 +42,6 @@ namespace Webservice
             builder.Services.AddScoped<IValidator<CreateUserDTO>, CreateUserValidator>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
-            Console.WriteLine("[JWT VALIDATION KEY]" + builder.Configuration["Jwt:Key"]);
 
 
             builder.Services.AddAuthentication(options =>
@@ -65,27 +63,6 @@ namespace Webservice
 
                 };
 
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var header = context.Request.Headers["Authorization"].FirstOrDefault();
-                        Console.WriteLine($"[AUTH HEADER RAW] {header}");
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
-                        Console.WriteLine($"[JWT FAIL] {context.Exception.Message}");
-                        Console.WriteLine($"{context.Exception.InnerException.Message}");
-                        return Task.CompletedTask;
-                    },
-                    OnChallenge = context =>
-                    {
-                        Console.WriteLine($"[JWT CHALLENGE] {context.ErrorDescription}");
-                        return Task.CompletedTask;
-                    }
-                };
-
             });
 
             builder.Services.AddAuthorizationBuilder().AddPolicy("AdminAccess", policy =>
@@ -102,18 +79,6 @@ namespace Webservice
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.Use(async (context, next) =>
-            {
-                // Optional: only log for authenticated endpoints
-                var path = context.Request.Path.Value;
-                if (!path.Contains("login", StringComparison.OrdinalIgnoreCase))
-                {
-                    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-                    Console.WriteLine($"[AUTH HEADER] {authHeader}");
-                }
-                await next.Invoke();
-            });
 
             app.CarEndpoints();
             app.UserEndpoints();

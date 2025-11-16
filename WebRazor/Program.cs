@@ -1,4 +1,6 @@
 using Contracts.DTO;
+using WebRazor.Services.Authentication;
+using WebRazor.Services.Authentication.Interfaces;
 using WebRazor.Services.ServiceExtensions;
 
 namespace WebRazor
@@ -12,22 +14,26 @@ namespace WebRazor
 
 
             builder.Services.AddRazorPages();
+            builder.Services.AddTransient<AuthStateHandler>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
-            builder.Services.AddTypedClientAPI<CarDTO>("cars", builder.Configuration["WebserviceAddress"]);
-            builder.Services.AddTypedClientAPI<CreateCarDTO>("cars", builder.Configuration["WebserviceAddress"]);
-            builder.Services.AddTypedClientAPI<UserDTO>("users", builder.Configuration["WebserviceAddress"]);
-            builder.Services.AddTypedClientAPI<CreateUserDTO>("users", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientGeneric<CarDTO>("cars", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientGeneric<UserDTO>("users", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientUser("users", builder.Configuration["WebserviceAddress"]);
 
 
 
 
 
+
+            builder.Services.AddSession();
 
 
 
             var app = builder.Build();
 
-
+            app.UseSession();
             app.UseHttpsRedirection();
 
             app.UseRouting();

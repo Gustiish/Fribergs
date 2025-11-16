@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Entities.Identity;
 using ApplicationCore.Interfaces.Authentication;
-using ApplicationCore.Interfaces.Repository;
 using AutoMapper;
 using Contracts.DTO;
 using FluentValidation;
@@ -14,15 +13,14 @@ namespace Webservice.Modules
     {
         public static void UserEndpoints(this WebApplication app)
         {
-            var endpoints = app.MapGroup($"/users/");
+            var endpoints = app.MapGroup($"/users");
 
-            endpoints.MapGet("getall", GetAll).RequireAuthorization("AdminAccess");
-            endpoints.MapGet("{id}", Get).RequireAuthorization("AdminAccess");
-            endpoints.MapPost("", Post).RequireAuthorization("AdminAccess");
-            endpoints.MapPatch("{id}", Patch).RequireAuthorization("AdminAccess");
-            endpoints.MapDelete("{id}", Delete).RequireAuthorization("AdminAccess");
-            endpoints.MapPost("login", Login).AllowAnonymous();
-            endpoints.MapPost("register", Register);
+            endpoints.MapGet("/getall", GetAll).RequireAuthorization("AdminAccess");
+            endpoints.MapGet("/{id}", Get).RequireAuthorization("AdminAccess");
+            endpoints.MapPatch("/{id}", Patch).RequireAuthorization("AdminAccess");
+            endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminAccess");
+            endpoints.MapPost("/login", Login);
+            endpoints.MapPost("/register", Register);
         }
 
         public static async Task<IResult> GetAll([FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
@@ -31,31 +29,31 @@ namespace Webservice.Modules
             return users is null ? TypedResults.NotFound("No users found") : TypedResults.Ok(_mapper.Map<List<UserDTO>>(users));
         }
 
-        public static async Task<IResult> Get(Guid id, [FromServices] IRepository<ApplicationUser> _repo, IMapper _mapper)
+        public static async Task<IResult> Get(Guid id, [FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
         {
-            ApplicationUser? user = await _repo.FindAsync(id);
+            ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
             return user is null ? TypedResults.NotFound($"No user with id {id}") : TypedResults.Ok(_mapper.Map<UserDTO>(user));
         }
 
-        public static async Task<IResult> Post(CreateUserDTO user, [FromServices] IRepository<ApplicationUser> _repo, IValidator<CreateUserDTO> _validator, IMapper _mapper)
+        public static async Task<IResult> Patch(UserDTO user, [FromServices] UserManager<ApplicationUser> _repo, IValidator<UserDTO> _validator, IMapper _mapper)
         {
             var result = _validator.Validate(user);
             if (!result.IsValid)
                 return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
-            return await _repo.CreateAsync(_mapper.Map<ApplicationUser>(user)) is false ? TypedResults.BadRequest($"Failed to create entity") : TypedResults.Created();
+
+            IdentityResult identityResult = await _repo.UpdateAsync(_mapper.Map<ApplicationUser>(user));
+
+            return identityResult.Succeeded is false ? TypedResults.BadRequest("Failed to update entity") : TypedResults.Ok(user);
         }
 
-        public static async Task<IResult> Patch(UserDTO user, [FromServices] IRepository<ApplicationUser> _repo, IValidator<UserDTO> _validator, IMapper _mapper)
+        public static async Task<IResult> Delete(Guid id, [FromServices] UserManager<ApplicationUser> _repo)
         {
-            var result = _validator.Validate(user);
-            if (!result.IsValid)
-                return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
-            return await _repo.UpdateAsync(_mapper.Map<ApplicationUser>(user)) is false ? TypedResults.BadRequest("Failed to update entity") : TypedResults.Ok(user);
-        }
+            ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
+            if (user is null)
+                return Results.NotFound($"User with id {id} was not found");
 
-        public static async Task<IResult> Delete(Guid id, [FromServices] IRepository<ApplicationUser> _repo)
-        {
-            return await _repo.DeleteAsync(id) is false ? TypedResults.BadRequest() : TypedResults.NoContent();
+            var result = await _repo.DeleteAsync(user);
+            return result.Succeeded is false ? TypedResults.BadRequest() : TypedResults.NoContent();
         }
 
         public static async Task<IResult> Login(LoginUserDTO userLogin, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service)
@@ -73,7 +71,7 @@ namespace Webservice.Modules
 
             string token = await _service.GenerateTokenAsync(user);
 
-            return Results.Ok(token);
+            return Results.Ok(new { Token = token });
         }
 
         public static async Task<IResult> Register(CreateUserDTO userRegister, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service, IValidator<CreateUserDTO> _validator)
@@ -105,7 +103,7 @@ namespace Webservice.Modules
                 return Results.BadRequest("Failed to create accesstoken");
             }
 
-            return Results.Ok(token);
+            return Results.Ok(new { Token = token });
         }
 
     }

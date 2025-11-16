@@ -1,4 +1,31 @@
 ﻿@page
-@model WebRazor.Pages.Users.DetailsModel
+@model WebRazor.Pages.Users.LoginModel
 @{
+    ViewData["Title"] = "Login";
 }
+
+<div class="flex h-screen">
+    <div class="flex flex-col justify-center">
+        <h1 class="font-bold mb-6 text-4xl">Login</h1>
+
+        <form method="post" class="flex flex-col gap-4">
+            <div class="flex flex-col">
+                <label asp-for="LoginUserDTO.Email" class="font-medium mb-1">Email</label>
+                <input asp-for="LoginUserDTO.Email" type="email" class= "border rounded-lg px-4 py-2 focus:outline-none focus:ring-blue-500 focus:ring-2"/>
+                <span asp-validation-for="LoginUserDTO.Email" class="text-red-500 text-sm"></span>
+            </div>
+            <div class="flex flex-col">
+                <label asp-for="LoginUserDTO.Password" class="font-medium mb-1">Password</label>
+                <input asp-for="LoginUserDTO.Password" type="password" class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-blue-500 focus:ring-2" />
+                <span asp-validation-for="LoginUserDTO.Password" class="text-red-500 text-sm"></span>
+            </div>
+            <button type="submit" class="mt-2 bf-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                Login
+            </button>
+        </form>
+
+    </div>
+               
+</div>
+
+<button class=""></button>
