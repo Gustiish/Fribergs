@@ -38,7 +38,10 @@ namespace Webservice.Modules.CarModule
             var result = _validator.Validate(car);
             if (!result.IsValid)
                 return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
-            return await _repo.CreateAsync(_mapper.Map<Car>(car)) is false ? TypedResults.BadRequest($"Failed to create entity") : TypedResults.Created();
+
+            return await _repo.CreateAsync(_mapper.Map<Car>(car)) is false
+              ? TypedResults.BadRequest("Failed to create entity")
+              : TypedResults.Created();
         }
 
         public static async Task<IResult> Patch(CarDTO car, [FromServices] IRepository<Car> _repo, IValidator<CarDTO> _validator, IMapper _mapper)

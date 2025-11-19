@@ -6,7 +6,7 @@ namespace WebRazor.Services.ServiceExtensions
 {
     public static class IServiceExtensions
     {
-        public static IServiceCollection AddTypedClientGeneric<T>(this IServiceCollection services, string prefix, string baseAddress) where T : class
+        public static IServiceCollection AddTypedClientGeneric<T>(this IServiceCollection services, string prefix, string baseAddress = "http://localhost:5132") where T : class
         {
             services.AddHttpClient<HttpClientGeneric<T>>("BackendAPI", options =>
             {

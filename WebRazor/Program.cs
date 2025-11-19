@@ -11,16 +11,16 @@ namespace WebRazor
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
+            Console.WriteLine($"WS Address = {builder.Configuration["WebserviceAddress"]}");
 
             builder.Services.AddRazorPages();
             builder.Services.AddTransient<AuthStateHandler>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
-            builder.Services.AddTypedClientGeneric<CarDTO>("cars", builder.Configuration["WebserviceAddress"]);
-            builder.Services.AddTypedClientGeneric<UserDTO>("users", builder.Configuration["WebserviceAddress"]);
-            builder.Services.AddTypedClientUser("users", builder.Configuration["WebserviceAddress"]);
+            builder.Services.AddTypedClientGeneric<CarDTO>("cars", builder.Configuration["WebserviceAddress"]!);
+            builder.Services.AddTypedClientGeneric<UserDTO>("users", builder.Configuration["WebserviceAddress"]!);
+            builder.Services.AddTypedClientUser("users", builder.Configuration["WebserviceAddress"]!);
 
 
 
@@ -33,6 +33,8 @@ namespace WebRazor
 
             var app = builder.Build();
 
+            app.UseStaticFiles();
+
             app.UseSession();
             app.UseHttpsRedirection();
 
@@ -40,9 +42,7 @@ namespace WebRazor
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
-            app.MapRazorPages()
-               .WithStaticAssets();
+            app.MapRazorPages();
 
             app.Run();
         }
