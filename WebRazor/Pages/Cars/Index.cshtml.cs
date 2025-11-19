@@ -1,6 +1,7 @@
 using Contracts.DTO;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
+using Contracts.Services;
 
 namespace WebRazor.Pages.Cars
 {
@@ -16,8 +17,8 @@ namespace WebRazor.Pages.Cars
 
         public async Task OnGet()
         {
-            List<CarDTO> carList = await _client.GetAllAsync();
-            Cars = carList;
+            ApiResponse<List<CarDTO>> response = await _client.GetAllAsync();
+            Cars = response.Data;
         }
     }
 }

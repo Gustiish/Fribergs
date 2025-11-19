@@ -1,4 +1,6 @@
-﻿namespace WebRazor.Services.API
+﻿using Contracts.Services;
+
+namespace WebRazor.Services.API
 {
     public class HttpClientGeneric<T> where T : class
     {
@@ -11,44 +13,33 @@
             _client = client;
         }
 
-        public async Task<List<T>?> GetAllAsync()
+        public async Task<ApiResponse<List<T>>?> GetAllAsync()
         {
             var response = await _client.GetAsync($"/{_prefix}/getall");
-            if (!response.IsSuccessStatusCode)
-                return null;
-            return await response.Content.ReadFromJsonAsync<List<T>>();
-
+            return await response.Content.ReadFromJsonAsync<ApiResponse<List<T>>>();
         }
 
-        public async Task<T?> GetAsync(Guid id)
+        public async Task<ApiResponse<T>?> GetAsync(Guid id)
         {
             var response = await _client.GetAsync($"/{_prefix}/{id}");
-            if (!response.IsSuccessStatusCode)
-                return null;
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
         }
 
-        public async Task<bool> UpdateAsync(T entity, Guid id)
+        public async Task<ApiResponse<T>?> UpdateAsync(T entity, Guid id)
         {
             var response = await _client.PatchAsJsonAsync($"/{_prefix}/{id}", entity);
-            if (!response.IsSuccessStatusCode)
-                return false;
-            return true;
+            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<ApiResponse<T>?> DeleteAsync(Guid id)
         {
             var response = await _client.DeleteAsync($"/{_prefix}/{id}");
-            if (!response.IsSuccessStatusCode)
-                return false;
-            return true;
+            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
         }
-        public async Task<bool> CreateAsync<TCreate>(TCreate entity) where TCreate : class
+        public async Task<ApiResponse<T>?> CreateAsync<TCreate>(TCreate entity) where TCreate : class
         {
             var response = await _client.PostAsJsonAsync<TCreate>($"/{_prefix}", entity);
-            if (!response.IsSuccessStatusCode)
-                return false;
-            return true;
+            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
         }
 
 

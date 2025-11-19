@@ -2,6 +2,7 @@ using Contracts.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
+using Contracts.Services;
 
 namespace WebRazor.Pages.Cars
 {
@@ -18,9 +19,11 @@ namespace WebRazor.Pages.Cars
 
         public async Task<IActionResult> OnPost()
         {
-            bool success = await _client.CreateAsync<CreateCarDTO>(CreateCarDTO);
-            if (!success)
-                return BadRequest("Failed to create");
+            ApiResponse<CreateCarDTO> response = await _client.CreateAsync<CreateCarDTO>(CreateCarDTO);
+            if (!response.Success)
+            {
+                return BadRequest($"Failed to create, statuscode: {response.statusCode}");
+            }
 
             return RedirectToPage("./Index");
         }

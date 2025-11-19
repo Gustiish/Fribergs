@@ -2,6 +2,7 @@ using Contracts.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
+using Contracts.Services;
 
 namespace WebRazor.Pages.Cars
 {
@@ -17,10 +18,10 @@ namespace WebRazor.Pages.Cars
         }
         public async Task<IActionResult> OnGet(Guid id)
         {
-            Car = await _client.GetAsync(id);
-            if (Car is null)
+            ApiResponse<CarDTO> response = await _client.GetAsync(id);
+            if (response.Data is null)
                 return NotFound();
-
+            Car = response.Data;
             return Page();
         }
 
@@ -28,8 +29,8 @@ namespace WebRazor.Pages.Cars
         {
             if (!ModelState.IsValid)
                 return Page();
-            bool success = await _client.UpdateAsync(Car, Car.Id);
-            if (!success)
+            ApiResponse<CarDTO> response = await _client.UpdateAsync(Car, Car.Id);
+            if (!response.Success)
             {
                 return Page();
             }
