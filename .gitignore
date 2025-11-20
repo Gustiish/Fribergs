@@ -365,4 +365,5 @@ FodyWeavers.xsd
 /WebRazor/appsettings.json
 /WebRazor/appsettings.Development.json
 /Webservice/appsettings.Development.json
+
 /Infrastructure/.config/dotnet-tools.json

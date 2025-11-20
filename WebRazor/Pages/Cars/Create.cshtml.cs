@@ -22,7 +22,7 @@ namespace WebRazor.Pages.Cars
             ApiResponse<CreateCarDTO> response = await _client.CreateAsync<CreateCarDTO>(CreateCarDTO);
             if (!response.Success)
             {
-                return BadRequest($"Failed to create, statuscode: {response.statusCode}");
+                return BadRequest($"Failed to create, statuscode: {response.StatusCode}");
             }
 
             return RedirectToPage("./Index");

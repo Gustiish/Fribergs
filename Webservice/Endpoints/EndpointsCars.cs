@@ -28,7 +28,7 @@ namespace Webservice.Modules.CarModule
 
             if (cars is null)
             {
-                return Results.Json(ApiResponseFactory<CarDTO>.CreateResponse(false, 404, null, "Cars is null"), statusCode: 404);
+                return Results.Json(ApiResponseFactory<List<CarDTO>>.CreateResponse(false, 404, null, "Cars is null"), statusCode: 404);
             }
             else
             {
