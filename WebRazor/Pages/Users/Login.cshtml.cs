@@ -2,6 +2,7 @@ using Contracts.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
+using WebRazor.Services.Authentication.Interfaces;
 
 namespace WebRazor.Pages.Users
 {
@@ -9,7 +10,7 @@ namespace WebRazor.Pages.Users
     {
         private readonly HttpClientUser _client;
         [BindProperty]
-        internal LoginUserDTO LoginUserDTO { get; set; }
+        public LoginUserDTO LoginUserDTO { get; set; }
 
         public LoginModel(HttpClientUser client)
         {
@@ -17,11 +18,12 @@ namespace WebRazor.Pages.Users
         }
         public async Task<IActionResult> OnPost()
         {
-            var response = await _client.LoginAsync(LoginUserDTO);
+            bool response = await _client.LoginAsync(LoginUserDTO);
             if (!response)
                 return Page();
 
-            return RedirectToAction("/cars/index");
+
+            return RedirectToPage("/Cars/Index");
         }
     }
 }

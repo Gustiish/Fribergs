@@ -5,11 +5,11 @@ namespace WebRazor.Services.API
 {
     public class HttpClientUser
     {
-        private readonly ITokenService _tokenService;
+        private readonly ITokenHandler _tokenService;
         private readonly HttpClientGeneric<UserDTO> _genericClient;
         private readonly HttpClient _client;
         private readonly string _prefix;
-        public HttpClientUser(HttpClient client, string prefix, ITokenService tokenService)
+        public HttpClientUser(HttpClient client, string prefix, ITokenHandler tokenService)
         {
             _client = client;
             _prefix = prefix;
@@ -19,11 +19,15 @@ namespace WebRazor.Services.API
 
         public async Task<bool> LoginAsync(LoginUserDTO login)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"{_client.BaseAddress}{_prefix}/login");
             var response = await _client.PostAsJsonAsync($"/{_prefix}/login", login);
             if (!response.IsSuccessStatusCode)
                 return false;
 
-            await _tokenService.SetTokenAsync(await response.Content.ReadAsStringAsync());
+
+            string token = await response.Content.ReadFromJsonAsync<string>();
+            await _tokenService.SetTokenAsync(token);
 
             return true;
         }
@@ -34,7 +38,9 @@ namespace WebRazor.Services.API
             if (!response.IsSuccessStatusCode)
                 return false;
 
-            await _tokenService.SetTokenAsync(await response.Content.ReadAsStringAsync());
+
+            string token = await response.Content.ReadFromJsonAsync<string>();
+            await _tokenService.SetTokenAsync(token);
 
             return true;
         }

@@ -1,6 +1,6 @@
 ﻿namespace WebRazor.Services.Authentication.Interfaces
 {
-    public interface ITokenService
+    public interface ITokenHandler
     {
         Task SetTokenAsync(string token);
         Task<string> GetTokenAsync();

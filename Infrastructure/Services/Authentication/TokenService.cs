@@ -34,7 +34,7 @@ namespace Infrastructure.Services.Authentication
             foreach (var role in roles)
                 claims.Add(new Claim(ClaimTypes.Role, role));
 
-            Console.WriteLine($"[JWT CONFIG] Key = {_config["Jwt:Key"]}");
+            
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 

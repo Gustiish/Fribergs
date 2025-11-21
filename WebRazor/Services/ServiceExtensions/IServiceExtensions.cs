@@ -6,12 +6,13 @@ namespace WebRazor.Services.ServiceExtensions
 {
     public static class IServiceExtensions
     {
-        public static IServiceCollection AddTypedClientGeneric<T>(this IServiceCollection services, string prefix, string baseAddress = "http://localhost:5132") where T : class
+        public static IServiceCollection AddTypedClientGeneric<T>(this IServiceCollection services, string prefix, string baseAddress) where T : class
         {
             services.AddHttpClient<HttpClientGeneric<T>>("BackendAPI", options =>
             {
                 options.BaseAddress = new Uri(baseAddress);
-            }).AddHttpMessageHandler<AuthStateHandler>().AddTypedClient(client => new HttpClientGeneric<T>(client, prefix));
+            }).AddHttpMessageHandler<AuthStateHandler>()
+            .AddTypedClient((client, provider) => new HttpClientGeneric<T>(client, prefix));
 
             return services;
         }
@@ -23,7 +24,7 @@ namespace WebRazor.Services.ServiceExtensions
                 options.BaseAddress = new Uri(baseAddress);
             }).AddHttpMessageHandler<AuthStateHandler>().AddTypedClient((client, serviceProvider) =>
             {
-                ITokenService service = serviceProvider.GetRequiredService<ITokenService>();
+                ITokenHandler service = serviceProvider.GetRequiredService<ITokenHandler>();
                 return new HttpClientUser(client, prefix, service);
             });
 

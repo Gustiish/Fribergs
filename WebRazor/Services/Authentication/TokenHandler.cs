@@ -2,10 +2,10 @@
 
 namespace WebRazor.Services.Authentication
 {
-    public class TokenService : ITokenService
+    public class TokenHandler : ITokenHandler
     {
         private readonly IHttpContextAccessor _context;
-        public TokenService(IHttpContextAccessor context)
+        public TokenHandler(IHttpContextAccessor context)
         {
             _context = context;
         }

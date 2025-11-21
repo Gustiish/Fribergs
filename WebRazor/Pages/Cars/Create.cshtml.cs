@@ -19,6 +19,11 @@ namespace WebRazor.Pages.Cars
 
         public async Task<IActionResult> OnPost()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(_client._client.BaseAddress);
+            Console.WriteLine($"{_client._client.BaseAddress}{_client._prefix}");
+            
+
             ApiResponse<CreateCarDTO> response = await _client.CreateAsync<CreateCarDTO>(CreateCarDTO);
             if (!response.Success)
             {

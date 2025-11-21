@@ -1,6 +1,7 @@
 using Contracts.DTO;
 using WebRazor.Services.Authentication;
 using WebRazor.Services.Authentication.Interfaces;
+using WebRazor.Services.PagesServices;
 using WebRazor.Services.ServiceExtensions;
 
 namespace WebRazor
@@ -11,12 +12,13 @@ namespace WebRazor
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            Console.WriteLine($"WS Address = {builder.Configuration["WebserviceAddress"]}");
+       
 
             builder.Services.AddRazorPages();
             builder.Services.AddTransient<AuthStateHandler>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<ITokenHandler, TokenHandler>();
+            builder.Services.AddScoped<JwtDecoder>();
 
             builder.Services.AddTypedClientGeneric<CarDTO>("cars", builder.Configuration["WebserviceAddress"]!);
             builder.Services.AddTypedClientGeneric<UserDTO>("users", builder.Configuration["WebserviceAddress"]!);

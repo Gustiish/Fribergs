@@ -11,7 +11,7 @@ namespace Webservice.Services.ExtensionMethods
             var _roleManager = scoped.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             var _userManager = scoped.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string[] roles = new[] { "Admin", "Customer" };
+            string[] roles = new[] { "Admin"};
             foreach (string role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))

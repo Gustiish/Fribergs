@@ -71,7 +71,7 @@ namespace Webservice.Modules
 
             string token = await _service.GenerateTokenAsync(user);
 
-            return Results.Ok(new { Token = token });
+            return Results.Ok(token);
         }
 
         public static async Task<IResult> Register(CreateUserDTO userRegister, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service, IValidator<CreateUserDTO> _validator)
