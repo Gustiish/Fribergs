@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Webservice.Services.Factories;
 
 namespace Webservice.Modules
 {
@@ -25,35 +26,68 @@ namespace Webservice.Modules
 
         public static async Task<IResult> GetAll([FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
         {
-            List<ApplicationUser>? users = _repo.Users.ToList();
-            return users is null ? TypedResults.NotFound("No users found") : TypedResults.Ok(_mapper.Map<List<UserDTO>>(users));
+            List<ApplicationUser> users = _repo.Users.ToList();
+            if (users == null || users.Count == 0)
+            {
+                return Results.NotFound(ApiResponseFactory<List<UserDTO>>.CreateResponse(false, 404, null, "Users is null or empty"));
+            }
+
+            List<UserDTO> userDTOs = new List<UserDTO>();
+            foreach (ApplicationUser user in users)
+            {
+                var roles = await _repo.GetRolesAsync(user);
+
+                var dto = _mapper.Map<UserDTO>(user);
+                dto.Roles = roles.ToArray();
+                userDTOs.Add(dto);
+            }
+            return Results.Ok(ApiResponseFactory<List<UserDTO>>.CreateResponse(true, 200, userDTOs, "Success"));
         }
 
         public static async Task<IResult> Get(Guid id, [FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
         {
             ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
-            return user is null ? TypedResults.NotFound($"No user with id {id}") : TypedResults.Ok(_mapper.Map<UserDTO>(user));
+
+            if (user is null)
+                return Results.NotFound(ApiResponseFactory<UserDTO>.CreateResponse(false, 404, null, $"User with id {id} was not found"));
+
+            UserDTO userDTO = new UserDTO();
+            var roles = await _repo.GetRolesAsync(user);
+            userDTO.Roles = roles.ToArray();
+
+            return Results.Ok(ApiResponseFactory<UserDTO>.CreateResponse(true, 200, userDTO, "Success"));
         }
+
 
         public static async Task<IResult> Patch(UserDTO user, [FromServices] UserManager<ApplicationUser> _repo, IValidator<UserDTO> _validator, IMapper _mapper)
         {
             var result = _validator.Validate(user);
+
             if (!result.IsValid)
-                return TypedResults.BadRequest($"Failed to validate: {result.Errors}");
+                return Results.BadRequest(ApiResponseFactory<UserDTO>.CreateResponse(false, 400, user, $"Failed to validate: {result.Errors}"));
 
             IdentityResult identityResult = await _repo.UpdateAsync(_mapper.Map<ApplicationUser>(user));
 
-            return identityResult.Succeeded is false ? TypedResults.BadRequest("Failed to update entity") : TypedResults.Ok(user);
+            if (!identityResult.Succeeded)
+                return Results.BadRequest(ApiResponseFactory<UserDTO>.CreateResponse(false, 400, user, "Failed to update entity"));
+
+            return Results.Ok(ApiResponseFactory<UserDTO>.CreateResponse(true, 200, user, "Success"));
         }
+
 
         public static async Task<IResult> Delete(Guid id, [FromServices] UserManager<ApplicationUser> _repo)
         {
             ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
-            if (user is null)
-                return Results.NotFound($"User with id {id} was not found");
 
-            var result = await _repo.DeleteAsync(user);
-            return result.Succeeded is false ? TypedResults.BadRequest() : TypedResults.NoContent();
+            if (user is null)
+                return Results.NotFound(ApiResponseFactory<object>.CreateResponse(false, 404, null, $"User with id {id} was not found"));
+
+            IdentityResult result = await _repo.DeleteAsync(user);
+
+            if (!result.Succeeded)
+                return Results.BadRequest(ApiResponseFactory<object>.CreateResponse(false, 400, null, "Failed to delete user"));
+
+            return Results.Ok(ApiResponseFactory<object>.CreateResponse(true, 200, null, "Success"));
         }
 
         public static async Task<IResult> Login(LoginUserDTO userLogin, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service)
@@ -103,7 +137,7 @@ namespace Webservice.Modules
                 return Results.BadRequest("Failed to create accesstoken");
             }
 
-            return Results.Ok(new { Token = token });
+            return Results.Ok(token);
         }
 
     }

@@ -4,7 +4,14 @@
     ViewData["Title"] = "Logout";
 }
 
-<h1 class="font-mediumbold">Logout</h1>
+<h1 class="font-bold text-xl text-center mb-6">Logout</h1>
 
+<div class="flex flex-col items-center gap-6 w-96 mx-auto">
+    <p class="text-red font-medium">Är du säker på att du vill logga ut?</p>
+    <form method="post" asp-page="/Users/Logout">
+        <button class="px-4 py-2 bg-red-500 text-white rounded" type="submit">
+            Logout
+        </button>
+    </form>
 
-
+</div>

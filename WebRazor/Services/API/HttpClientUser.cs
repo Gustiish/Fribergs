@@ -6,14 +6,12 @@ namespace WebRazor.Services.API
     public class HttpClientUser
     {
         private readonly ITokenHandler _tokenService;
-        private readonly HttpClientGeneric<UserDTO> _genericClient;
         private readonly HttpClient _client;
         private readonly string _prefix;
         public HttpClientUser(HttpClient client, string prefix, ITokenHandler tokenService)
         {
             _client = client;
             _prefix = prefix;
-            _genericClient = new HttpClientGeneric<UserDTO>(client, prefix);
             _tokenService = tokenService;
         }
 

@@ -24,10 +24,8 @@ namespace WebRazor.Services.PagesServices
                 var token = handler.ReadJwtToken(jwt);
 
                 // Adjust the claim type based on your token
-                return token.Claims.FirstOrDefault(c =>
-                           c.Type == "email" ||
-                           c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-                       )?.Value;
+                return token.Claims.FirstOrDefault(c => c.Type == "email" || 
+                c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
             }
         }
 

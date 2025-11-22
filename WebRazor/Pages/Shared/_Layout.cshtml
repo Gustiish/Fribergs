@@ -22,25 +22,37 @@
                     Hello @JwtDecoder.Email
                 </div>
             }
-           
+
             <ul class="list-none flex gap-6 mx-auto">
-               
+
                 <li>
                     <a asp-page="/cars/index" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Cars</a>
                 </li>
                 <li>
                     <a asp-page="/users/index" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Users</a>
-                </li>                           
+                </li>
             </ul>
             <ul class="list-none flex gap-6 absolute right-6">
-                <li>
-                    <a asp-page="/users/login" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Login</a>
-                </li>
-                <li>
-                    <a asp-page="/users/register" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Register</a>
-                </li>
+                @if (JwtDecoder.Email != null)
+                {
+                    <li>
+                        <a asp-page="/users/logout" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Logout</a>
+                    </li>
+
+                }
+                else
+                {
+                    <li>
+                        <a asp-page="/users/login" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Login</a>
+                    </li>
+                    <li>
+                        <a asp-page="/users/register" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Register</a>
+                    </li>
+                }
+
+
             </ul>
-           
+
         </nav>
 
     </header>

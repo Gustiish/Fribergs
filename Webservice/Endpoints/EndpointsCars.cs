@@ -62,8 +62,8 @@ namespace Webservice.Modules.CarModule
             }
             else if (!await _repo.CreateAsync(_mapper.Map<Car>(car)))
             {
-                return Results.Json(ApiResponseFactory<CreateCarDTO>.CreateResponse(false, 500, car, "Failed to create")
-                    , contentType: "application/json", statusCode: 500);
+                return Results.Json(ApiResponseFactory<CreateCarDTO>.CreateResponse(false, 500, car, "Failed to create"),
+                     contentType: "application/json", statusCode: 500);
             }
             else
             {
@@ -100,8 +100,6 @@ namespace Webservice.Modules.CarModule
             {
                 return Results.NoContent();
             }
-
-
         }
 
 

@@ -6,10 +6,10 @@
 
 <h1 class="font-bold text-xl text-center mb-6">Login</h1>
 
-<div class="flex flex-col justify-center items-center gap-6">
+<div class="flex flex-col items-center gap-6 w-96 mx-auto">
 
     <form method="post"
-          class="flex flex-col gap-4 p-6 w-96 bg-white border rounded-xl shadow">
+          class="flex flex-col gap-4 p-6 bg-white border rounded-xl shadow w-full">
 
         <div class="flex flex-col gap-2">
             <label asp-for="LoginUserDTO.Email" class="font-semibold">Email</label>
@@ -23,19 +23,17 @@
                    class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
         </div>
 
-        <button class="rounded text-white bg-sky-500 hover:bg-sky-600 px-4 py-2 transition mt-2"
-                type="submit">
+        <button class="rounded text-white bg-sky-500 hover:bg-sky-600 px-4 py-2 transition mt-2 w-auto self-start">
             Login
         </button>
     </form>
-    
-    <button class="px-4 py-2 rounded-lg border bg-amber-500 hover:bg-amber-600 text-black transition justify-start"
+
+    <button class="px-4 py-2 rounded-lg border bg-amber-500 hover:bg-amber-600 text-black transition self-start w-auto"
             asp-page="/Cars/Index">
         Bilar
     </button>
 
 </div>
-
 
 
 
