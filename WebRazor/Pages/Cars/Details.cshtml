@@ -1,5 +1,7 @@
 ﻿@page
 @model WebRazor.Pages.Cars.DetailsModel
+@using WebRazor.Services.PagesServices;
+@inject JwtDecoder JwtDecoder;
 @{
     ViewData["Title"] = "Details";
 }
@@ -29,6 +31,14 @@ else
                 <span class="font-semibold text-right pr-4">Price:</span>
                 <span>$@Model.Car.Price</span>
             </div>
+            @if (JwtDecoder.Roles?.Any(r => r == "Customer") == true)
+            {
+                <div>
+                    <a asp-page="/CustomerOrders/Create" asp-route-id="@Model.Car.Id" class="bg-sky-500 hover:bg-sky-700 rounded px-4 py-2 text-white">Create Booking</a>
+                </div>
+            }
+
+            
         </div>
     </div>
 }
@@ -36,5 +46,6 @@ else
 <div class="mt-4">
     <a asp-page="./Index" class="bg-sky-500 hover:bg-sky-700 rounded px-4 py-2 text-white">Back to list</a>
 </div>
+
 
 

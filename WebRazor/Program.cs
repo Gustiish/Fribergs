@@ -12,7 +12,7 @@ namespace WebRazor
         {
             var builder = WebApplication.CreateBuilder(args);
 
-       
+
 
             builder.Services.AddRazorPages();
             builder.Services.AddTransient<AuthStateHandler>();
@@ -22,7 +22,13 @@ namespace WebRazor
 
             builder.Services.AddTypedClientGeneric<CarDTO>("cars", builder.Configuration["WebserviceAddress"]!);
             builder.Services.AddTypedClientGeneric<UserDTO>("users", builder.Configuration["WebserviceAddress"]!);
+            builder.Services.AddTypedClientGeneric<OrderDTO>("orders", builder.Configuration["WebserviceAddress"]!);
             builder.Services.AddTypedClientUser("users", builder.Configuration["WebserviceAddress"]!);
+
+            builder.Services.AddHttpClient("TokenRefreshClient", client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["WebserviceAddress"]);
+            });
 
 
 

@@ -17,7 +17,7 @@ namespace Infrastructure.Services.Repository
             _set = context.Set<T>();
         }
 
-        public virtual async Task<bool> CreateAsync(T Entity)
+        public async Task<bool> CreateAsync(T Entity)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Infrastructure.Services.Repository
 
         }
 
-        public virtual async Task<T?> FindAsync(Guid id)
+        public async Task<T?> FindAsync(Guid id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Infrastructure.Services.Repository
             }
         }
 
-        public virtual async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Infrastructure.Services.Repository
             }
         }
 
-        public virtual async Task<IEnumerable<T>?> GetAllAsync()
+        public async Task<IEnumerable<T>?> GetAllAsync()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Infrastructure.Services.Repository
         }
 
 
-        public virtual async Task<bool> UpdateAsync(T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
             try
             {
@@ -97,6 +97,11 @@ namespace Infrastructure.Services.Repository
                 Console.WriteLine($"Failed to update {typeof(T).Name}: {ex.Message}");
                 return false;
             }
+        }
+
+        public IQueryable<T>? Query()
+        {
+            return _set.AsQueryable();
         }
     }
 }

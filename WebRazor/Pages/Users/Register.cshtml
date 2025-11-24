@@ -23,7 +23,6 @@
             <label class="font-semibold" id="ConfirmPassword">Confirm Password</label>
             <input type="password"
                    class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
-            <div id="passwordError"></div>
         </div>
 
         <div class="gap-2 flex flex-col p-2 mt-2">
@@ -37,30 +36,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-
-        console.log("script loaded");
-        const password = document.getElementById('Password');
-        const confirmPassword = document.getElementById('ConfirmPassword');
-        const form = document.querySelector("form");
-        const passwordError = document.getElementById('passwordError');
-
-        form.addEventListener('submit', function (e) {
-            passwordError.textContent = "";
-
-            if (password.value !== confirmPassword.value){
-                e.preventDefault();
-
-                const errorMessage = document.createElement('p');
-                errorMessage.textContent = "Password don't match!";
-                errorMessage.classList.add("text-red-500", "mt-1");
-
-                passwordError.appendChild(errorMessage);
-
-                confirmPassword.focus();
-            }
-
-        })
-    </script>
 }
 

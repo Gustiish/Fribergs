@@ -11,23 +11,55 @@ namespace WebRazor.Services.PagesServices
         {
             _context = context;
         }
+        public string[]? Roles
+        {
+            get
+            {
+                var token = _context.HttpContext?.Session.GetString("JWT");
+                if (string.IsNullOrEmpty(token))
+                    return null;
 
+                var jwt = Decode(token);
+
+                return jwt.Claims
+                    .Where(c => c.Type == ClaimTypes.Role || c.Type == "role" || c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                    .Select(c => c.Value)
+                    .ToArray();
+            }
+        }
         public string? Email
         {
             get
             {
-                var jwt = _context.HttpContext?.Session.GetString("JWT");
-                if (string.IsNullOrEmpty(jwt))
+                var token = _context.HttpContext?.Session.GetString("JWT");
+                if (string.IsNullOrEmpty(token))
                     return null;
 
-                var handler = new JwtSecurityTokenHandler();
-                var token = handler.ReadJwtToken(jwt);
+                var jwt = Decode(token);
 
-                // Adjust the claim type based on your token
-                return token.Claims.FirstOrDefault(c => c.Type == "email" || 
+
+                return jwt.Claims.FirstOrDefault(c => c.Type == "email" ||
                 c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
             }
         }
 
+        public JwtSecurityToken Decode(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            return handler.ReadJwtToken(token);
+        }
+
+        public bool IsExpired(string token)
+        {
+            var jwt = Decode(token);
+
+            var exp = jwt.Payload.Expiration;
+
+            if (exp == null)
+                return true;
+
+            var expiration = DateTimeOffset.FromUnixTimeSeconds(exp.Value);
+            return expiration <= DateTimeOffset.UtcNow;
+        }
     }
 }

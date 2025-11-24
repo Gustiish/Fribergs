@@ -11,15 +11,19 @@ namespace WebRazor.Pages.Users
         [BindProperty]
         public CreateUserDTO CreateUserDTO { get; set; }
 
+        public RegisterModel(HttpClientUser client)
+        {
+            _client = client;
+        }
+
         public async Task<IActionResult> OnPost()
         {
+            if (!ModelState.IsValid)
+                return Page();
             bool success = await _client.RegisterAsync(CreateUserDTO);
             if (!success)
                 return Page();
-
-
-
-            return RedirectToPage("/users/index");
+            return RedirectToPage("/Cars/Index");
         }
 
 

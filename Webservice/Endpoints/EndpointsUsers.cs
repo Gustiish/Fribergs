@@ -1,18 +1,23 @@
 ﻿using ApplicationCore.Entities.Identity;
+using ApplicationCore.Entities.Models;
 using ApplicationCore.Interfaces.Authentication;
+using ApplicationCore.Interfaces.Repository;
+using ApplicationCore.Records;
 using AutoMapper;
 using Contracts.DTO;
+using Contracts.Services;
+using Contracts.Services.Authentication;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Webservice.Services.Factories;
 
-namespace Webservice.Modules
+namespace Webservice.Endpoints
 {
-    public static class EndpointsExtensions
+    public static class EndpointsUser
     {
-        public static void UserEndpoints(this WebApplication app)
+        public static void UserEndpoints(this IEndpointRouteBuilder app)
         {
             var endpoints = app.MapGroup($"/users");
 
@@ -22,6 +27,7 @@ namespace Webservice.Modules
             endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminAccess");
             endpoints.MapPost("/login", Login);
             endpoints.MapPost("/register", Register);
+            endpoints.MapPost("/refresh", Refresh);
         }
 
         public static async Task<IResult> GetAll([FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
@@ -44,16 +50,17 @@ namespace Webservice.Modules
             return Results.Ok(ApiResponseFactory<List<UserDTO>>.CreateResponse(true, 200, userDTOs, "Success"));
         }
 
-        public static async Task<IResult> Get(Guid id, [FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper)
+        public static async Task<IResult> Get(Guid id, [FromServices] UserManager<ApplicationUser> _repo, IMapper _mapper, IRepository<CustomerOrder> _repoOrder)
         {
             ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
 
             if (user is null)
                 return Results.NotFound(ApiResponseFactory<UserDTO>.CreateResponse(false, 404, null, $"User with id {id} was not found"));
 
-            UserDTO userDTO = new UserDTO();
+            UserDTO userDTO = _mapper.Map<UserDTO>(user);
             var roles = await _repo.GetRolesAsync(user);
             userDTO.Roles = roles.ToArray();
+            userDTO.Orders = _mapper.Map<List<OrderDTO>>(await _repoOrder.GetAllAsync());
 
             return Results.Ok(ApiResponseFactory<UserDTO>.CreateResponse(true, 200, userDTO, "Success"));
         }
@@ -80,14 +87,14 @@ namespace Webservice.Modules
             ApplicationUser? user = await _repo.FindByIdAsync(id.ToString());
 
             if (user is null)
-                return Results.NotFound(ApiResponseFactory<object>.CreateResponse(false, 404, null, $"User with id {id} was not found"));
+                return Results.NotFound(ApiResponseFactory<UserDTO>.CreateResponse(false, 404, null, $"User with id {id} was not found"));
 
             IdentityResult result = await _repo.DeleteAsync(user);
 
             if (!result.Succeeded)
-                return Results.BadRequest(ApiResponseFactory<object>.CreateResponse(false, 400, null, "Failed to delete user"));
+                return Results.BadRequest(ApiResponseFactory<UserDTO>.CreateResponse(false, 400, null, "Failed to delete user"));
 
-            return Results.Ok(ApiResponseFactory<object>.CreateResponse(true, 200, null, "Success"));
+            return Results.Ok(ApiResponseFactory<UserDTO>.CreateResponse(true, 200, null, "Success"));
         }
 
         public static async Task<IResult> Login(LoginUserDTO userLogin, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service)
@@ -103,16 +110,15 @@ namespace Webservice.Modules
                 return Results.NotFound();
             }
 
-            string token = await _service.GenerateTokenAsync(user);
-
-            return Results.Ok(token);
+            TokenPair tokens = await _service.GenerateInitalTokenAsync(user);
+            return Results.Ok(new TokenResponse(tokens.AccessToken, tokens.RefreshToken));
         }
 
         public static async Task<IResult> Register(CreateUserDTO userRegister, [FromServices] UserManager<ApplicationUser> _repo, ITokenService _service, IValidator<CreateUserDTO> _validator)
         {
             ValidationResult result = _validator.Validate(userRegister);
             if (!result.IsValid)
-                return Results.BadRequest("Invalid user");
+                return Results.BadRequest();
 
 
 
@@ -131,14 +137,22 @@ namespace Webservice.Modules
 
             await _repo.AddToRoleAsync(user, "Customer");
 
-            string token = await _service.GenerateTokenAsync(user);
-            if (token == null)
-            {
-                return Results.BadRequest("Failed to create accesstoken");
-            }
+            TokenPair tokens = await _service.GenerateInitalTokenAsync(user);
 
-            return Results.Ok(token);
+
+            return Results.Ok(new TokenResponse(tokens.AccessToken, tokens.RefreshToken));
+        }
+
+        public static async Task<IResult> Refresh(RefreshTokenRequest request, [FromServices] ITokenService _service)
+        {
+            TokenPair tokens = await _service.RotateTokenAsync(request.RefreshToken);
+            if (tokens == null)
+                return Results.BadRequest("Failed to create refresh and access tokens or tokens have been expired.");
+
+            return Results.Ok(new TokenResponse(tokens.AccessToken, tokens.RefreshToken));
         }
 
     }
 }
+
+

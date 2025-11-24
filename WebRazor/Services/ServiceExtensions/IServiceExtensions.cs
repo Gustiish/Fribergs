@@ -8,7 +8,7 @@ namespace WebRazor.Services.ServiceExtensions
     {
         public static IServiceCollection AddTypedClientGeneric<T>(this IServiceCollection services, string prefix, string baseAddress) where T : class
         {
-            services.AddHttpClient<HttpClientGeneric<T>>("BackendAPI", options =>
+            services.AddHttpClient<HttpClientGeneric<T>>(options =>
             {
                 options.BaseAddress = new Uri(baseAddress);
             }).AddHttpMessageHandler<AuthStateHandler>()
@@ -19,7 +19,7 @@ namespace WebRazor.Services.ServiceExtensions
 
         public static IServiceCollection AddTypedClientUser(this IServiceCollection services, string prefix, string baseAddress)
         {
-            services.AddHttpClient<HttpClientUser>("BackendAPI", options =>
+            services.AddHttpClient<HttpClientUser>(options =>
             {
                 options.BaseAddress = new Uri(baseAddress);
             }).AddHttpMessageHandler<AuthStateHandler>().AddTypedClient((client, serviceProvider) =>

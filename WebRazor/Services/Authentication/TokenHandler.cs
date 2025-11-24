@@ -1,30 +1,46 @@
-﻿using WebRazor.Services.Authentication.Interfaces;
+﻿using Contracts.Services;
+using Contracts.Services.Authentication;
+using WebRazor.Services.Authentication.Interfaces;
 
 namespace WebRazor.Services.Authentication
 {
     public class TokenHandler : ITokenHandler
     {
         private readonly IHttpContextAccessor _context;
-        public TokenHandler(IHttpContextAccessor context)
+        private readonly HttpClient _refreshClient;
+        public TokenHandler(IHttpContextAccessor context, IHttpClientFactory factory)
         {
             _context = context;
+            _refreshClient = factory.CreateClient("TokenRefreshClient");
         }
 
-        public Task ClearToken()
+        public void ClearToken()
         {
             _context.HttpContext.Session.Clear();
-            return Task.CompletedTask;
         }
 
-        public async Task<string> GetTokenAsync()
+        public string GetAccessToken()
         {
             return _context.HttpContext.Session.GetString("JWT");
         }
 
-        public Task SetTokenAsync(string token)
+        public string GetRefreshToken()
         {
-            _context.HttpContext!.Session.SetString("JWT", token);
-            return Task.CompletedTask;
+            return _context.HttpContext.Session.GetString("RefreshToken");
+        }
+
+        public async Task<TokenResponse> RefreshTokensAsync(string refreshToken)
+        {
+            RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+            var response = await _refreshClient.PostAsJsonAsync<RefreshTokenRequest>($"/users/refresh", request);
+            TokenResponse tokens = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            return tokens;
+        }
+
+        public void SetTokens(TokenResponse tokens)
+        {
+            _context.HttpContext.Session.SetString("JWT", tokens.AccessToken);
+            _context.HttpContext.Session.SetString("RefreshToken", tokens.RefreshToken);
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace WebRazor.Services.Authentication.Interfaces
+﻿using Contracts.Services.Authentication;
+
+namespace WebRazor.Services.Authentication.Interfaces
 {
     public interface ITokenHandler
     {
-        Task SetTokenAsync(string token);
-        Task<string> GetTokenAsync();
-        Task ClearToken();
-
+        void SetTokens(TokenResponse tokens);
+        string GetAccessToken();
+        string GetRefreshToken();
+        void ClearToken();
+        Task<TokenResponse> RefreshTokensAsync(string refreshToken);
 
     }
 

@@ -14,7 +14,15 @@ namespace Infrastructure.Database
         }
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<CustomerOrder> Orders { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<RefreshToken>(e => e.HasIndex(r => r.Token).IsUnique());
+            builder.Entity<RefreshToken>(e => e.HasOne(r => r.User).WithMany().HasForeignKey(r => r.UserId));
 
+            base.OnModelCreating(builder);
+        }
     }
 }

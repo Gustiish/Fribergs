@@ -1,0 +1,58 @@
+﻿@page "{id:guid}"
+@model WebRazor.Pages.CustomerOrders.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold">Order #@Model.Order.Id</h1>
+        <p class="text-gray-500">Car: @Model.Order.Car.Name (@Model.Order.Car.Brand @Model.Order.Car.Model)</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="p-4 border rounded-lg">
+            <h2 class="text-lg font-semibold mb-1">Price</h2>
+            <p class="text-gray-600">$@Model.Order.Price</p>
+        </div>
+        <div class="p-4 border rounded-lg">
+            <h2 class="text-lg font-semibold mb-1">Start Date</h2>
+            <p class="text-gray-600">@Model.Order.Start.ToString("yyyy-MM-dd")</p>
+        </div>
+        <div class="p-4 border rounded-lg">
+            <h2 class="text-lg font-semibold mb-1">End Date</h2>
+            <p class="text-gray-600">@Model.Order.End.ToString("yyyy-MM-dd")</p>
+        </div>
+        <div class="p-4 border rounded-lg">
+            <h2 class="text-lg font-semibold mb-1">Car Price</h2>
+            <p class="text-gray-600">$@Model.Order.Car.Price</p>
+        </div>
+    </div>
+
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-3">Car Details</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-4 border rounded-lg">
+                <h3 class="font-semibold">Car Name</h3>
+                <p class="text-gray-600">@Model.Order.Car.Name</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <h3 class="font-semibold">Brand</h3>
+                <p class="text-gray-600">@Model.Order.Car.Brand</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <h3 class="font-semibold">Model</h3>
+                <p class="text-gray-600">@Model.Order.Car.Model</p>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <h3 class="font-semibold">URL</h3>
+                <a class="text-blue-600 hover:underline" href="@Model.Order.Car.URL" target="_blank">
+                    @Model.Order.Car.URL
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

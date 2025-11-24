@@ -13,8 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Webservice.Modules;
-using Webservice.Modules.CarModule;
+using Webservice.Endpoints;
 using Webservice.Services.ExtensionMethods;
 using Webservice.Services.MappingProfiles;
 using Webservice.Services.Validators;
@@ -40,6 +39,8 @@ namespace Webservice
             builder.Services.AddScoped<IValidator<CreateCarDTO>, CreateCarValidator>();
             builder.Services.AddScoped<IValidator<UserDTO>, UserValidator>();
             builder.Services.AddScoped<IValidator<CreateUserDTO>, CreateUserValidator>();
+            builder.Services.AddScoped<IValidator<CreateOrderDTO>, CreateOrderValidator>();
+            builder.Services.AddScoped<IValidator<OrderDTO>, OrderValidator>();
             builder.Services.AddScoped<ITokenService, TokenService>();
 
 
@@ -59,15 +60,22 @@ namespace Webservice
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
-
+                    ValidAudience = builder.Configuration["Jwt:Audience"]
                 };
 
             });
 
-            builder.Services.AddAuthorizationBuilder().AddPolicy("AdminAccess", policy =>
+            builder.Services.AddAuthorization(options =>
             {
-                policy.RequireRole("Admin");
+                options.AddPolicy("AdminOrCustomer", policy =>
+                {
+                    policy.RequireRole("Admin", "Customer");
+                });
+
+                options.AddPolicy("AdminAccess", policy =>
+                {
+                    policy.RequireRole("Admin");
+                });
             });
             var app = builder.Build();
 
@@ -82,6 +90,7 @@ namespace Webservice
 
             app.CarEndpoints();
             app.UserEndpoints();
+            app.OrderEndpoints();
 
             app.Run();
 

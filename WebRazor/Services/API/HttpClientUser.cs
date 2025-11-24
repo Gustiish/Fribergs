@@ -1,4 +1,5 @@
 ﻿using Contracts.DTO;
+using Contracts.Services.Authentication;
 using WebRazor.Services.Authentication.Interfaces;
 
 namespace WebRazor.Services.API
@@ -17,15 +18,13 @@ namespace WebRazor.Services.API
 
         public async Task<bool> LoginAsync(LoginUserDTO login)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"{_client.BaseAddress}{_prefix}/login");
             var response = await _client.PostAsJsonAsync($"/{_prefix}/login", login);
             if (!response.IsSuccessStatusCode)
                 return false;
 
 
-            string token = await response.Content.ReadFromJsonAsync<string>();
-            await _tokenService.SetTokenAsync(token);
+            TokenResponse tokens = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            _tokenService.SetTokens(tokens);
 
             return true;
         }
@@ -37,11 +36,13 @@ namespace WebRazor.Services.API
                 return false;
 
 
-            string token = await response.Content.ReadFromJsonAsync<string>();
-            await _tokenService.SetTokenAsync(token);
+            TokenResponse tokens = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            _tokenService.SetTokens(tokens);
 
             return true;
         }
+
+
 
 
     }

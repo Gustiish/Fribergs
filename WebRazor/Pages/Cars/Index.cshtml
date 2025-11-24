@@ -1,4 +1,6 @@
 ﻿@page
+@using WebRazor.Services.PagesServices;
+@inject JwtDecoder JwtDecoder;
 @model WebRazor.Pages.Cars.IndexModel
 @{
     ViewData["Title"] = "Cars";
@@ -7,7 +9,10 @@
 <h1 class="mb-3">Cars</h1>
 
 <div class="mb-3">
-    <a asp-page="./Create" class="btn btn-primary">Create new car</a>
+    @if (JwtDecoder.Roles?.Any(r => r == "Admin") == true)
+    {
+        <a asp-page="./Create" class="btn btn-primary">Create new car</a>
+    }
     <button type="button" class="btn btn-secondary" onclick="window.location.reload()">Refresh</button>
 </div>
 
@@ -37,8 +42,12 @@ else
                     <td>@(car.Price)</td>
                     <td>
                         <a asp-page="./Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Details</a>
-                        <a asp-page="./Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Edit</a>
-                        <a asp-page="./Delete" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Delete</a>
+                        @if (JwtDecoder.Roles?.Any(r => r == "Admin") == true)
+                        {
+                            <a asp-page="./Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Delete</a>
+                        }
+
                     </td>
                 </tr>
             }

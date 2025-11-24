@@ -16,6 +16,9 @@ namespace Webservice.Services.MappingProfiles
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ReverseMap();
+
+            CreateMap<CustomerOrder, OrderDTO>().ReverseMap();
+            CreateMap<CreateOrderDTO, CustomerOrder>();
         }
 
     }

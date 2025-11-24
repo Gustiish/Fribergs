@@ -1,8 +1,8 @@
 using Contracts.DTO;
+using Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
-using Contracts.Services;
 
 namespace WebRazor.Pages.Cars
 {
@@ -19,10 +19,8 @@ namespace WebRazor.Pages.Cars
 
         public async Task<IActionResult> OnPost()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine(_client._client.BaseAddress);
-            Console.WriteLine($"{_client._client.BaseAddress}{_client._prefix}");
-            
+            if (!ModelState.IsValid)
+                return Page();
 
             ApiResponse<CreateCarDTO> response = await _client.CreateAsync<CreateCarDTO>(CreateCarDTO);
             if (!response.Success)

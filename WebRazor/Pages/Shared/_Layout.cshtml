@@ -15,7 +15,9 @@
 </head>
 <body>
     <header class="bg-white shadow mb-4">
-        <nav class="flex container mx-auto relative items-center p-6">
+        <nav class="relative container mx-auto px-6 py-4 flex items-center">
+
+
             @if (JwtDecoder.Email != null)
             {
                 <div class="text-black font-medium mr-8">
@@ -23,39 +25,58 @@
                 </div>
             }
 
-            <ul class="list-none flex gap-6 mx-auto">
 
-                <li>
-                    <a asp-page="/cars/index" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Cars</a>
-                </li>
-                <li>
-                    <a asp-page="/users/index" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Users</a>
-                </li>
-            </ul>
-            <ul class="list-none flex gap-6 absolute right-6">
+            <div class="absolute left-1/2 -translate-x-1/2">
+                <ul class="flex gap-6">
+                    <li>
+                        <a asp-page="/cars/index" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Cars</a>
+                    </li>
+
+                    @if (JwtDecoder.Roles?.Any(r => r == "Admin") == true)
+                    {
+                        <li>
+                            <a asp-page="/users/index" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Users</a>
+                        </li>
+
+                        <li>
+                            <a asp-page="/CustomerOrders/index" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Orders</a>
+                        </li>
+                    }
+                    else if (JwtDecoder.Roles?.Any(r => r == "Customer") == true)
+                    {
+                        <li>
+                            <a asp-page="/CustomerOrders/index" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">My orders</a>
+                        </li>
+                    }
+
+
+
+                    
+                </ul>
+            </div>
+
+
+            <ul class="flex gap-6 ml-auto">
                 @if (JwtDecoder.Email != null)
                 {
                     <li>
-                        <a asp-page="/users/logout" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Logout</a>
+                        <a asp-page="/users/logout" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Logout</a>
                     </li>
-
                 }
                 else
                 {
                     <li>
-                        <a asp-page="/users/login" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Login</a>
+                        <a asp-page="/users/login" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Login</a>
                     </li>
                     <li>
-                        <a asp-page="/users/register" class="border rounded shadow no-wrap text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Register</a>
+                        <a asp-page="/users/register" class="border rounded shadow text-black py-2 px-4 bg-amber-400 hover:bg-amber-600">Register</a>
                     </li>
                 }
-
-
             </ul>
 
         </nav>
-
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

@@ -22,6 +22,7 @@ namespace WebRazor.Pages.Users
                 Users = null;
 
             Users = apiResponse.Data;
+            return Page();
         }
 
     }

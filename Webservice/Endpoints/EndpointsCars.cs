@@ -4,12 +4,11 @@ using AutoMapper;
 using Contracts.DTO;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using Webservice.Services.Factories;
 
-namespace Webservice.Modules.CarModule
+namespace Webservice.Endpoints
 {
-    public static class EndpointsExtensions
+    public static class EndpointsCar
     {
         public static void CarEndpoints(this IEndpointRouteBuilder app)
         {
@@ -80,7 +79,7 @@ namespace Webservice.Modules.CarModule
             }
             else if (!await _repo.UpdateAsync(_mapper.Map<Car>(car)))
             {
-                return Results.Json(ApiResponseFactory<CarDTO>.CreateResponse(false, 500, car, "Failed to update"), contentType: "application/json", 
+                return Results.Json(ApiResponseFactory<CarDTO>.CreateResponse(false, 500, car, "Failed to update"), contentType: "application/json",
                     statusCode: 500);
             }
             else

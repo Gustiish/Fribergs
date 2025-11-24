@@ -9,6 +9,6 @@ namespace ApplicationCore.Interfaces.Repository
         Task<T?> FindAsync(Guid Id);
         Task<bool> DeleteAsync(Guid Id);
         Task<IEnumerable<T>?> GetAllAsync();
-
+        IQueryable<T>? Query();
     }
 }
