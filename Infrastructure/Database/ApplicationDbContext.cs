@@ -22,6 +22,8 @@ namespace Infrastructure.Database
             builder.Entity<RefreshToken>(e => e.HasIndex(r => r.Token).IsUnique());
             builder.Entity<RefreshToken>(e => e.HasOne(r => r.User).WithMany().HasForeignKey(r => r.UserId));
 
+            builder.Entity<CustomerOrder>(e => e.HasOne(r => r.User).WithMany(u => u.CustomerOrders).HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Restrict));
+
             base.OnModelCreating(builder);
         }
     }

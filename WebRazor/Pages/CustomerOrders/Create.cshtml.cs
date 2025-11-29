@@ -3,6 +3,7 @@ using Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
+using WebRazor.Services.PagesServices;
 
 namespace WebRazor.Pages.CustomerOrders
 {
@@ -12,10 +13,11 @@ namespace WebRazor.Pages.CustomerOrders
         private readonly HttpClientGeneric<CarDTO> _carClient;
         [BindProperty]
         public CreateOrderDTO Order { get; set; } = new CreateOrderDTO();
-        public CreateModel(HttpClientGeneric<OrderDTO> client, HttpClientGeneric<CarDTO> carClient)
+        public CreateModel(HttpClientGeneric<OrderDTO> client, HttpClientGeneric<CarDTO> carClient, JwtDecoder decoder)
         {
             _client = client;
             _carClient = carClient;
+            Order.UserId = Guid.Parse(decoder.UserId);
         }
 
         public async Task<IActionResult> OnGet(Guid id)
@@ -26,14 +28,12 @@ namespace WebRazor.Pages.CustomerOrders
                 return NotFound();
 
             Order.CarId = id;
+            Order.Car = carResponse.Data;
 
             return Page();
         }
         public async Task<IActionResult> OnPost()
         {
-            if (!ModelState.IsValid)
-                return Page();
-
             ApiResponse<CreateOrderDTO> response = await _client.CreateAsync<CreateOrderDTO>(Order);
             if (!response.Success)
             {

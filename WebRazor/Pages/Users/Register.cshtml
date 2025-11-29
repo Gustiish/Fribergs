@@ -20,13 +20,14 @@
                    class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
         </div>
         <div class="gap-2 flex flex-col p-2">
-            <label class="font-semibold" id="ConfirmPassword">Confirm Password</label>
-            <input type="password"
+            <label asp-for="CreateUserDTO.ConfirmPassword" class="font-semibold">Confirm Password</label>
+            <input asp-for="CreateUserDTO.ConfirmPassword" type="password" id="ConfirmPassword"
                    class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-sky-500" />
         </div>
+        <p class="text-red-500" id="errorText"></p>
 
         <div class="gap-2 flex flex-col p-2 mt-2">
-            <button class="rounded no-wrap text-white bg-sky-500 hover:bg-sky-600 px-3 py-2 transition" type="submit">
+            <button class="rounded no-wrap text-white bg-sky-500 hover:bg-sky-600 px-3 py-2 transition" type="submit" id="button">
                 Register
             </button>
         </div>
@@ -36,5 +37,31 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const password = document.getElementById("Password");
+        const confirmPassword = document.getElementById("ConfirmPassword");
+        const button = document.getElementById("button");
+        const error = document.getElementById("errorText");
+
+        function validatePasswords(){
+            const match = password.value === confirmPassword.value;
+           
+            if (!match){
+                error.textContent = "Passwords do not match";
+            }
+            else{
+                error.textContent ="";
+            }
+
+            button.disabled = !match;
+            button.style.opacity = match ? "1" : "0.5";
+        }
+
+        password.addEventListener("input", validatePasswords);
+        confirmPassword.addEventListener("input", validatePasswords);
+
+        validatePasswords();
+    </script>
 }
 

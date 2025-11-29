@@ -31,18 +31,20 @@ namespace WebRazor.Services.API
             return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
         }
 
-        public async Task<ApiResponse<T>?> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var response = await _client.DeleteAsync($"/{_prefix}/{id}");
-            return await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
         }
         public async Task<ApiResponse<TCreate>?> CreateAsync<TCreate>(TCreate entity) where TCreate : class
         {
-            
             var response = await _client.PostAsJsonAsync<TCreate>($"/{_prefix}", entity);
-
             return await response.Content.ReadFromJsonAsync<ApiResponse<TCreate>>();
         }
+
+
 
 
     }

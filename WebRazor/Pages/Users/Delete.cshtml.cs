@@ -26,7 +26,7 @@ namespace WebRazor.Pages.Users
         public async Task<IActionResult> OnPost(Guid id)
         {
             var response = await _client.DeleteAsync(id);
-            if (!response.Success)
+            if (!response)
                 return Page();
             return RedirectToPage("./Index");
         }

@@ -2,7 +2,6 @@ using Contracts.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
-using WebRazor.Services.Authentication.Interfaces;
 
 namespace WebRazor.Pages.Users
 {
@@ -20,7 +19,11 @@ namespace WebRazor.Pages.Users
         {
             bool response = await _client.LoginAsync(LoginUserDTO);
             if (!response)
+            {
+                ViewData["Error"] = "Incorrect password or user";
                 return Page();
+            }
+
 
 
             return RedirectToPage("/Cars/Index");

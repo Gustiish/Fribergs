@@ -1,8 +1,8 @@
 using Contracts.DTO;
+using Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebRazor.Services.API;
-using Contracts.Services;
 
 namespace WebRazor.Pages.Cars
 {
@@ -23,9 +23,10 @@ namespace WebRazor.Pages.Cars
 
         public async Task<IActionResult> OnPost(Guid id)
         {
-            ApiResponse<CarDTO> response = await _client.DeleteAsync(id);
-            if (!response.Success)
+            var response = await _client.DeleteAsync(id);
+            if (!response)
                 return Page();
+
             return RedirectToPage("./Index");
         }
     }

@@ -19,7 +19,10 @@ namespace WebRazor.Pages.Users
         public async Task<IActionResult> OnPost()
         {
             if (!ModelState.IsValid)
+            {
+                ViewData["Error"] = "Passwords do not match";
                 return Page();
+            }
             bool success = await _client.RegisterAsync(CreateUserDTO);
             if (!success)
                 return Page();

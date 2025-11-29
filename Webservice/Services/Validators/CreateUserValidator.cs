@@ -9,6 +9,8 @@ namespace Webservice.Services.Validators
         {
             RuleFor(user => user.Email).NotEmpty().EmailAddress();
             RuleFor(user => user.Password).NotEmpty().MaximumLength(16).MinimumLength(6);
+            RuleFor(user => user.ConfirmPassword).NotEmpty().Equal(r => r.Password);
+
         }
 
     }

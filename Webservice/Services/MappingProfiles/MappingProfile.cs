@@ -18,7 +18,12 @@ namespace Webservice.Services.MappingProfiles
             .ReverseMap();
 
             CreateMap<CustomerOrder, OrderDTO>().ReverseMap();
-            CreateMap<CreateOrderDTO, CustomerOrder>();
+            CreateMap<CreateOrderDTO, CustomerOrder>()
+                .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start))
+                .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+                .ForMember(dest => dest.CarId, opt => opt.MapFrom(src => src.CarId))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId));
         }
 
     }

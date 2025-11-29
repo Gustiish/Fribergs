@@ -10,8 +10,8 @@ namespace ApplicationCore.Entities.Models
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public Guid CarId { get; set; }
-        public Car Car { get; set; }
+        public virtual Car Car { get; set; }
         public Guid UserId { get; set; }
-        public ApplicationUser Customer { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

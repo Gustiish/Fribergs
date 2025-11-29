@@ -97,7 +97,8 @@ namespace Webservice.Endpoints
             }
             else
             {
-                return Results.NoContent();
+                return Results.Json(ApiResponseFactory<CarDTO>.CreateResponse(true, 500, null, "Success"), contentType: "application/json",
+                    statusCode: 204);
             }
         }
 

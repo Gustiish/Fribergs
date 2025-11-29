@@ -43,6 +43,20 @@ namespace WebRazor.Services.PagesServices
             }
         }
 
+        public string? UserId
+        {
+            get
+            {
+                var token = _context.HttpContext?.Session.GetString("JWT");
+                if (string.IsNullOrEmpty(token))
+                    return null;
+
+                var jwt = Decode(token);
+
+                return jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            }
+        }
+
         public JwtSecurityToken Decode(string token)
         {
             var handler = new JwtSecurityTokenHandler();

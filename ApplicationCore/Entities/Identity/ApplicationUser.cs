@@ -6,6 +6,6 @@ namespace ApplicationCore.Entities.Identity
 {
     public class ApplicationUser : IdentityUser<Guid>, IEntity
     {
-        public List<CustomerOrder> Orders { get; set; } = new List<CustomerOrder>();
+        public List<CustomerOrder> CustomerOrders { get; set; } = new List<CustomerOrder>();
     }
 }

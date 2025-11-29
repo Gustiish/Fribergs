@@ -19,7 +19,7 @@ namespace Webservice.Endpoints
             endpoints.MapGet("/{id}", Get).RequireAuthorization("AdminOrCustomer");
             endpoints.MapPost("/", Post).RequireAuthorization("AdminOrCustomer");
             endpoints.MapPatch("/{id}", Patch).RequireAuthorization("AdminAccess");
-            endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminAccess");
+            endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminOrCustomer");
         }
 
         public static async Task<IResult> GetAll([FromServices] IRepository<CustomerOrder> _repo, IMapper _mapper)
@@ -54,11 +54,14 @@ namespace Webservice.Endpoints
 
         public static async Task<IResult> Post(CreateOrderDTO createOrderDTO, [FromServices] IRepository<CustomerOrder> _repo, IMapper _mapper, IValidator<CreateOrderDTO> _validator)
         {
+
+
             var result = _validator.Validate(createOrderDTO);
             if (!result.IsValid)
             {
                 return Results.BadRequest(ApiResponseFactory<CreateOrderDTO>.CreateResponse(false, 400, null, "Failed to validate"));
             }
+
             else if (!await _repo.CreateAsync(_mapper.Map<CustomerOrder>(createOrderDTO)))
             {
                 return Results.Json(ApiResponseFactory<CreateOrderDTO>.CreateResponse(false, 500, createOrderDTO, "Failed to create"), contentType: "application/json", statusCode: 500);
@@ -94,7 +97,7 @@ namespace Webservice.Endpoints
             }
             else
             {
-                return Results.NoContent();
+                return Results.Json(ApiResponseFactory<OrderDTO>.CreateResponse(true, 204, null, "Success"), contentType: "application/json", statusCode: 204);
             }
         }
     }

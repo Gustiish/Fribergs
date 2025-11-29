@@ -21,6 +21,7 @@ namespace Infrastructure.Services.Repository
         {
             try
             {
+
                 _set.Add(Entity);
                 await _context.SaveChangesAsync();
                 return true;

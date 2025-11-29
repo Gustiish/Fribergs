@@ -22,7 +22,7 @@ namespace Webservice.Endpoints
             var endpoints = app.MapGroup($"/users");
 
             endpoints.MapGet("/getall", GetAll).RequireAuthorization("AdminAccess");
-            endpoints.MapGet("/{id}", Get).RequireAuthorization("AdminAccess");
+            endpoints.MapGet("/{id}", Get).RequireAuthorization("AdminOrCustomer");
             endpoints.MapPatch("/{id}", Patch).RequireAuthorization("AdminAccess");
             endpoints.MapDelete("/{id}", Delete).RequireAuthorization("AdminAccess");
             endpoints.MapPost("/login", Login);

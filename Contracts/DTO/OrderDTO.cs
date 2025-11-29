@@ -9,5 +9,6 @@
         public Guid CarId { get; set; }
         public CarDTO Car { get; set; }
         public Guid UserId { get; set; }
+        public UserDTO User { get; set; }
     }
 }

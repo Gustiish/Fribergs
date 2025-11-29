@@ -6,5 +6,6 @@ namespace Contracts.Services
         public string? Message { get; set; }
         public int StatusCode { get; set; }
         public TData? Data { get; set; }
+
     }
 }
